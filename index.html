@@ -71,7 +71,7 @@ It is meant for P4 stream depot. Major features are:</p>
 <a name="merge-detection" class="anchor" href="#merge-detection"><span class="octicon octicon-link"></span></a>Merge detection</h3>
 
 <p>Following git philosophy only complete merges are imported. Partial merges are imported as regular single parented commits however integrations are recorded in a commit message. Merges with multiple parents are supported.
-Note that merge can be only imported if the merge origin is already imported. To ensure this is the case all streams must be imported simultaneously.</p>
+Note that merge can be only imported if the merge origin is already imported. To ensure this is the case all streams must be imported together.</p>
 
 <h3>
 <a name="filtering" class="anchor" href="#filtering"><span class="octicon octicon-link"></span></a>Filtering</h3>
@@ -81,7 +81,7 @@ Note that merge can be only imported if the merge origin is already imported. To
 <h3>
 <a name="performance" class="anchor" href="#performance"><span class="octicon octicon-link"></span></a>Performance</h3>
 
-<p>git-p4s caches blobs digests during run therefore it is recommended to import all desired streams simultaneously to increase blob re-use. As its predecessor git-p4s uses <code>p4 print</code> command to retrieve file contents.</p>
+<p>git-p4s caches blobs digests during run therefore it is recommended to import all desired streams at once to increase blob re-use. As its predecessor git-p4s uses <code>p4 print</code> command to retrieve file contents.</p>
 
 <h3>
 <a name="repository-size" class="anchor" href="#repository-size"><span class="octicon octicon-link"></span></a>Repository size</h3>
@@ -113,7 +113,17 @@ Note that merge can be only imported if the merge origin is already imported. To
       </footer>
     </div>
 
-    
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-45610616-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
 
   </body>
 </html>
