@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Git-p4s : Import Perforce stream history into a git repository." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Git-p4s</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/lm1/git-p4s">View on GitHub</a>
+
+          <h1 id="project_title">Git-p4s</h1>
+          <h2 id="project_tagline">Import Perforce stream history into a git repository.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/lm1/git-p4s/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/lm1/git-p4s/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="git-p4s" class="anchor" href="#git-p4s"><span class="octicon octicon-link"></span></a>git-p4s</h1>
+
+<p>Import Perforce stream history into a git repository.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Make sure P4PORT variable is set and perform the following command inside a fresh git repo:</p>
+
+<pre><code>git-p4s.py sync //depot/mystream1 //depot/mystream2
+</code></pre>
+
+<p>To fetch latest changes:</p>
+
+<pre><code>git-p4s.py sync
+</code></pre>
+
+<h3>
+<a name="what-is-git-p4s" class="anchor" href="#what-is-git-p4s"><span class="octicon octicon-link"></span></a>What is git-p4s?</h3>
+
+<p>git-p4s is a fork of the original git-p4 utility bundled with git. 
+It is meant for P4 stream depot. Major features are:</p>
+
+<ul>
+<li>Supports multiple P4 streams in a single git repository</li>
+<li>Incremental update</li>
+<li>Merge detection</li>
+<li>History filtering on file level</li>
+<li>Optimized import of multiple streams</li>
+<li>Import of automatic and static labels</li>
+</ul><h3>
+<a name="requirementslimitations" class="anchor" href="#requirementslimitations"><span class="octicon octicon-link"></span></a>Requirements/limitations</h3>
+
+<p>git-p4s works only with streamed depot (requires 2012 Perforce client or newer). Only one-way import is supported.</p>
+
+<h3>
+<a name="merge-detection" class="anchor" href="#merge-detection"><span class="octicon octicon-link"></span></a>Merge detection</h3>
+
+<p>Following git philosophy only complete merges are imported. Partial merges are imported as regular single parented commits however integrations are recorded in a commit message. Merges with multiple parents are supported.
+Note that merge can be only imported if the merge origin is already imported. To ensure this is the case all streams must be imported simultaneously.</p>
+
+<h3>
+<a name="filtering" class="anchor" href="#filtering"><span class="octicon octicon-link"></span></a>Filtering</h3>
+
+<p>History can be filtered during import with <code>--check-ignore</code> option (leveraging <code>.gitignore</code> or <code>.git/info/exclude</code>). This is used to exclude large binaries or build outputs. Use with care. <code>--prune-empty</code> will skip commits which become empty after filtering.</p>
+
+<h3>
+<a name="performance" class="anchor" href="#performance"><span class="octicon octicon-link"></span></a>Performance</h3>
+
+<p>git-p4s caches blobs digests during run therefore it is recommended to import all desired streams simultaneously to increase blob re-use. As its predecessor git-p4s uses <code>p4 print</code> command to retrieve file contents.</p>
+
+<h3>
+<a name="repository-size" class="anchor" href="#repository-size"><span class="octicon octicon-link"></span></a>Repository size</h3>
+
+<p>Since git-p4s internally uses <em>git fast-import</em> a resulting pack file may not be optimally compressed, use <code>git gc --aggressive</code> to repack the repository after initial import. For some project history filtering may be helpful.</p>
+
+<h3>
+<a name="line-endings" class="anchor" href="#line-endings"><span class="octicon octicon-link"></span></a>Line endings</h3>
+
+<p>git-p4s retrieves raw data from Perforce server and uses <em>git fast-import</em> to load blobs into a git repository. None of these operations performs line ending conversion. Since P4 server seems to use Unix newlines internally therefore on Windows <code>core.autocrlf = true</code> is a recommended setting for projects using Windows line ending (CRLF).</p>
+
+<h3>
+<a name="is-git-p4s-compatible-with-the-original-git-p4" class="anchor" href="#is-git-p4s-compatible-with-the-original-git-p4"><span class="octicon octicon-link"></span></a>Is git-p4s compatible with the original git-p4?</h3>
+
+<p>No.</p>
+
+<h3>
+<a name="why-fork" class="anchor" href="#why-fork"><span class="octicon octicon-link"></span></a>Why fork?</h3>
+
+<p>Original git-p4 utility does not support P4 streams well. Streamed depot constraints let implementation take important assumptions while maintaining backward compatibility with git-p4 and support for non-streamed depots would makes it much harder to reliably implement merge detection.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Git-p4s maintained by <a href="https://github.com/lm1">lm1</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
