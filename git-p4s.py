@@ -37,6 +37,7 @@ import re
 import shutil
 import json
 import string
+import datetime
 import warnings
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", category=DeprecationWarning)
@@ -458,6 +459,12 @@ def banner():
         debug("  Python " + sys.version)
         debug("  " + gitVersion())
         debug("  Perforce " + p4_version_string())
+
+def timediff(time1):
+    time2 = datetime.datetime.now()
+    raw = time2 - time1
+    seconds = raw.seconds + raw.microseconds / 500001
+    return datetime.timedelta(raw.days, seconds)
 
 class Command:
     def __init__(self):
@@ -1356,6 +1363,8 @@ class P4Sync(Command, P4UserMap):
 
     def run(self):
         args = self.parse_args()
+        time1 = datetime.datetime.now()
+        debug(time1)
         self.cacheFile         = self.gitdir + "/p4s-commit-cache"
         self.marksFile         = self.gitdir + "/p4s-fast-import-marks.tmp"
         self.ignoredLabelsFile = self.gitdir + "/p4s-ignored-labels"
@@ -1403,8 +1412,10 @@ class P4Sync(Command, P4UserMap):
         self.importDone()
         self.createSymbolicRefs()
 
-        verbose("Blob map size: %d, reused %d." % (len(self.blobmap), self.blobsReused))
-        log("Imported %d changes (%d ignored)" % (totalCommits, totalIgnored))
+        verbose("Blob map size: %d, reused %d."
+                % (len(self.blobmap), self.blobsReused))
+        log("Imported %d changes (%d ignored) in %s"
+            % (totalCommits, totalIgnored, timediff(time1)))
         return True
 
 def printUsage(commands):
