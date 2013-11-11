@@ -633,6 +633,13 @@ class CommitCache:
         else:
             return None
 
+    # TODO just read last entry if cache file not loaded yet
+    def getMax(self):
+        if self.map:
+            return max(self.map.keys())
+        else:
+            return 0
+
     def readMarks(self, filename):
         if self.marks:
             debug("Reading marks")
@@ -956,7 +963,7 @@ class P4Sync(Command, P4UserMap):
             return "%s <a@b>" % userid
 
     def streamTag(self, tag, labelDetails, commit, epoch):
-        verbose("tag %s for commit %s" % (tag, commit))
+        debug("tag %s for commit %s" % (tag, commit))
         self.gitStream.write("tag %s\n" % tag)
         self.gitStream.write("from %s\n" % commit)
 
@@ -1108,7 +1115,7 @@ class P4Sync(Command, P4UserMap):
             # Use current time if there is no 'Update' field
             when = int(label.get("Update", time.time()))
             self.streamTag(gitname, label, commit, when)
-            verbose("p4 label %s mapped to git commit %s" % (name, commit))
+            debug("p4 label %s mapped to git commit %s" % (name, commit))
         append_lines(self.ignoredLabelsFile, ignore)
 
     def getSrcFileRevsPerStream(_, stream, changelog):
@@ -1326,12 +1333,15 @@ class P4Sync(Command, P4UserMap):
 
     def getNewP4Changes(self):
         allChanges = []
+        head = self.commitCache.getMax()
         for (path, stream) in self.streams.iteritems():
             log("Getting p4 changes for %s/..." % path)
-            if stream["change"]:
-                begin = stream["change"] + 1
-            else:
+            if "new" in stream:
                 begin = self.sinceChange
+            else:
+                assert(head >= stream["change"])
+                # Import from a firts change not in cache
+                begin = head + 1
             changes = p4ChangesForPath(path, begin, end=self.limitChanges)
             allChanges.extend(changes)
         return allChanges
@@ -1391,12 +1401,13 @@ class P4Sync(Command, P4UserMap):
             return False
         debugdump(self.streams)
 
-        allChanges = self.getNewP4Changes()
-        if not allChanges:
-            log("Nothing to import.")
 
         self.initCache()
         self.loadUserMapFromCache()
+
+        allChanges = self.getNewP4Changes()
+        if not allChanges:
+            log("Nothing to import.")
 
         self.importBegin()
 
