@@ -20,7 +20,7 @@
 # License: MIT <http://www.opensource.org/licenses/mit-license.php>
 #
 
-_version = "0.3"
+_version = "0.301"
 
 import sys
 if sys.hexversion < 0x02060000:
