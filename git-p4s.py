@@ -1190,7 +1190,9 @@ class P4Sync(Command, P4UserMap):
         """Check whether source change was fully merged to target stream"""
         cmd = ["diff2", "-q", "%s/...@%d" % (srcStream, srcChange),
                               "%s/...@%d" % (stream, change)]
-        diff = p4CmdList(cmd, ignore_error=True)
+        diff = p4CmdList(cmd)
+        if not diff:
+            return True
         if diff[0]["code"] == "error":
             assert(diff[0]["generic"] == 17)
             return True   # No difference -- perfect merge or copy
